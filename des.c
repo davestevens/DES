@@ -21,7 +21,7 @@ void DES(char *input, unsigned int *Keys, unsigned int *IIP) {
   zeroOut(IP);
   setupM(input, M);
   initialPermute(M, IP);
-  iCantThinkOfNamesNow(IP, Keys);
+  swap(IP, Keys);
   finalPermute(&IP[16], IIP);
   return;
 }
@@ -85,7 +85,7 @@ unsigned int f(unsigned int Right, unsigned int *K) {
   return j;
 }
 
-void iCantThinkOfNamesNow(unsigned int *IP, unsigned int *K) {
+void swap(unsigned int *IP, unsigned int *K) {
   int i;
   for(i=1;i<17;i++) {
     *(IP+i) = (*((IP+17)+(i-1)));

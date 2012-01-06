@@ -7,7 +7,7 @@ void formKeys(unsigned int *, unsigned int *);
 
 void setupM(char *, unsigned int *);
 void initialPermute(unsigned int *, unsigned int *);
-void iCantThinkOfNamesNow(unsigned int *, unsigned int *);
+void swap(unsigned int *, unsigned int *);
 unsigned int f(unsigned int, unsigned int *);
 void finalPermute(unsigned int *, unsigned int *);
 
