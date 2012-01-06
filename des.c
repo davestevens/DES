@@ -2,7 +2,7 @@
 #include "des_top.h"
 
 void initDES(unsigned int *K, unsigned int *Keys) {
-  unsigned int KP[2];
+  unsigned int KP[2] = {0,0};
   unsigned int CD[34];
 
   zeroOut(CD);
@@ -165,8 +165,6 @@ void zeroOut(unsigned int *P) {
 void setupBlocks(unsigned int *CD) {
   int i;
   for(i=1;i<17;i++) {
-    /*(CD+i)->left = ((CD+(i-1))->left << shifts[i-1]) | ((CD+(i-1))->left >> (28 - shifts[i-1]));
-      (CD+i)->right = ((CD+(i-1))->right << shifts[i-1]) | ((CD+(i-1))->right >> (28 - shifts[i-1]));*/
     *(CD+i) = ((*(CD+(i-1))) << shifts[i-1]) | ((*(CD+(i-1))) >> (28 - shifts[i-1]));
     *((CD+17)+i) = ((*((CD+17)+(i-1))) << shifts[i-1]) | ((*((CD+17)+(i-1))) >> (28 - shifts[i-1]));
   }
@@ -186,12 +184,10 @@ void permuteKP(unsigned int *K, unsigned int *KP, unsigned int *CD) {
 
     if(i < 28) {
       *(KP) |= (bit << (31-i));
-      /*CD->left |= (bit << (27-i));*/
       *CD |= (bit << (27-i));
     }
     else {
       *(KP + 1) |= (bit << (31-(i+4)));
-      /*CD->right |= (bit << (27-(i+4)));*/
       *(CD + 17) |= (bit << (27-(i+4)));
     }
   }
