@@ -12,7 +12,7 @@ void initDES(unsigned int *K, unsigned int *Keys) {
   return;
 }
 
-void DES(char *input, unsigned int *Keys, unsigned int *IIP) {
+void DES(unsigned char *input, unsigned int *Keys, unsigned int *IIP, unsigned int decrypt) {
   unsigned int M[2];
   unsigned int IP[34];
 
@@ -21,7 +21,7 @@ void DES(char *input, unsigned int *Keys, unsigned int *IIP) {
   zeroOut(IP);
   setupM(input, M);
   initialPermute(M, IP);
-  swap(IP, Keys);
+  swap(IP, Keys, decrypt);
   finalPermute(&IP[16], IIP);
   return;
 }
@@ -85,11 +85,16 @@ unsigned int f(unsigned int Right, unsigned int *K) {
   return j;
 }
 
-void swap(unsigned int *IP, unsigned int *K) {
+void swap(unsigned int *IP, unsigned int *K, unsigned int decrypt) {
   int i;
   for(i=1;i<17;i++) {
     *(IP+i) = (*((IP+17)+(i-1)));
-    *((IP+17)+i) = (*(IP+(i-1))) ^ f((*((IP+17)+(i-1))), (K+i));
+    if(!decrypt) {
+      *((IP+17)+i) = (*(IP+(i-1))) ^ f((*((IP+17)+(i-1))), (K+i));
+    }
+    else {
+      *((IP+17)+i) = (*(IP+(i-1))) ^ f((*((IP+17)+(i-1))), (K+(17-i)));
+    }
   }
 }
 
@@ -114,20 +119,20 @@ void initialPermute(unsigned int *M, unsigned int *IP) {
   return;
 }
 
-void setupM(char *input, unsigned int *M) {
+void setupM(unsigned char *input, unsigned int *M) {
   int i = 0;
   unsigned char this;
   *M = 0;
   *(M+1) = 0;
   do {
     this = *input++;
-    if(i < 8) {
-      *M |= (this & 0xff) << (28-(i*4));
+    if(i < 4) {
+      *M |= (this & 0xff) << (24 - (8*i));
     }
     else {
-      *(M+1) |= (this & 0xff) << (28-((i-8)*4));
+      *(M+1) |= (this & 0xff) << (24 - (8*(i-4)));
     }
-  } while(++i < 16);
+  } while(++i < 8);
   return;
 }
 
